@@ -1,5 +1,6 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
+import * as cors from "cors";
 
 import { UploadController } from "./upload_controller";
 import { FSUploadService } from "./upload_service";
@@ -10,6 +11,8 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cors());
 
 const uploadService = new FSUploadService();
 const uploadController = new UploadController(uploadService);
