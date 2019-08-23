@@ -7,7 +7,7 @@ export interface UploadService {
 
 export class FSUploadService implements UploadService {
     async upload(filename: string, data: Buffer): Promise<string> {
-        const filePath = path.join("..", "uploads", filename);
+        const filePath = path.join(__dirname, "..", "uploads", filename);
         await fs.writeFile(filePath, data);
         return filePath;
     }
