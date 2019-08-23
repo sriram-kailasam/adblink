@@ -20,7 +20,10 @@ export class UploadController {
             file.on("end", async () => {
                 completeData = Buffer.concat(chunks);
 
-                const url = this.uploadService.upload(filename, completeData);
+                const url = await this.uploadService.upload(
+                    filename,
+                    completeData
+                );
 
                 res.json({
                     success: true,
@@ -28,6 +31,16 @@ export class UploadController {
                 });
             });
         });
+
+        busboy.on("error", err => {
+            console.error(err);
+
+            res.json({
+                success: false
+            });
+        });
+
+        req.pipe(busboy);
     };
 
     register() {
