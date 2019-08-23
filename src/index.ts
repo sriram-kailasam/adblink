@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const uploadService = new FSUploadService();
 const uploadController = new UploadController(uploadService);
 
-app.use("/upload", uploadController.register());
+app.use("/api/upload", uploadController.register());
 
 const port = +process.env.PORT;
 app.listen(port, () => {
