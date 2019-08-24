@@ -1,14 +1,21 @@
 import { UploadService } from "./upload_service";
 import { Request, Response, Router } from "express";
 
+import * as path from "path";
+
 import * as Busboy from "busboy";
+import { Server } from "socket.io";
 
 export class UploadController {
     router = Router();
-    constructor(private uploadService: UploadService) {}
+    constructor(
+        private uploadService: UploadService,
+        private socketServer: Server
+    ) {}
 
     upload = (req: Request, res: Response) => {
         const busboy = new Busboy({ headers: req.headers });
+        const advertId = req.params.advertId;
 
         busboy.on("file", (fieldname, file, filename) => {
             let chunks: Buffer[] = [];
@@ -21,7 +28,7 @@ export class UploadController {
                 completeData = Buffer.concat(chunks);
 
                 const url = await this.uploadService.upload(
-                    filename,
+                    advertId + filename.slice(filename.lastIndexOf(".")),
                     completeData
                 );
 
@@ -29,6 +36,8 @@ export class UploadController {
                     success: true,
                     url: url
                 });
+
+                this.socketServer.sockets.emit("new-advert", url);
             });
         });
 
@@ -44,7 +53,7 @@ export class UploadController {
     };
 
     register() {
-        this.router.post("/", this.upload);
+        this.router.post("/:advertId", this.upload);
 
         return this.router;
     }
