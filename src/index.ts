@@ -40,7 +40,7 @@ if (process.env.NODE_ENV !== "production") require("dotenv").config();
     io.on("connection", socket => {
         socket.on("message", message => {
             console.log("Received:", message);
-            socket.emit("Received: " + message);
+            socket.emit("message", "Received: " + message);
         });
     });
 
