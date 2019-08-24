@@ -2,3 +2,5 @@ node_modules
 build
 .env
 npm-debug.log
+uploads
+google-application-credentials.json
